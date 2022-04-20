@@ -1,0 +1,7 @@
+C:\Users\comp0705\Desktop\2-2 ИС Баскаков\BankClients_bDs-master\BankClients_bDs\bin\Debug\BankClients_bDs.exe.config
+C:\Users\comp0705\Desktop\2-2 ИС Баскаков\BankClients_bDs-master\BankClients_bDs\bin\Debug\BankClients_bDs.exe
+C:\Users\comp0705\Desktop\2-2 ИС Баскаков\BankClients_bDs-master\BankClients_bDs\bin\Debug\BankClients_bDs.pdb
+C:\Users\comp0705\Desktop\2-2 ИС Баскаков\BankClients_bDs-master\BankClients_bDs\obj\Debug\BankClients_bDs.csproj.AssemblyReference.cache
+C:\Users\comp0705\Desktop\2-2 ИС Баскаков\BankClients_bDs-master\BankClients_bDs\obj\Debug\BankClients_bDs.csproj.CoreCompileInputs.cache
+C:\Users\comp0705\Desktop\2-2 ИС Баскаков\BankClients_bDs-master\BankClients_bDs\obj\Debug\BankClients_bDs.exe
+C:\Users\comp0705\Desktop\2-2 ИС Баскаков\BankClients_bDs-master\BankClients_bDs\obj\Debug\BankClients_bDs.pdb
