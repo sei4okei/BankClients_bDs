@@ -11,8 +11,8 @@ namespace BankClients_bDs
         public int ID;
         public double percent;
         public double size;
-        public string dateOpen;
-        public string dateClose;
+        public DateTime dateOpen;
+        public DateTime dateClose;
         public string clientPassNumebrs;
     }
 }

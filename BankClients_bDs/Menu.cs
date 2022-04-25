@@ -12,10 +12,11 @@ namespace BankClients_bDs
 {
     internal class Menu
     {
+        private static DateTime todayDate = DateTime.Now;
         private static List<Clients> DB = new List<Clients>();
         private static IEnumerator<int> sequenceDeposit = Enumerable.Range(1, int.MaxValue).GetEnumerator();
         private static IEnumerator<int> sequenceClient = Enumerable.Range(1, int.MaxValue).GetEnumerator();
-        static string[] menuArray = new string[4] { "Меню", "1. Создание клиента", "2. Просмотр базы", "3. Выход"};
+        static string[] menuArray = new string[4] { "Меню", "1. Создание клиента", "2. Просмотр базы", "3. Выход" };
         static void Main()
         {
             while (true)
@@ -37,7 +38,7 @@ namespace BankClients_bDs
                         break;
 
                     case 3:
-                        MaxAmount();
+                        MaxAmountofDepositProfit();
                         break;
 
                     case 4:
@@ -83,9 +84,9 @@ namespace BankClients_bDs
             for (int i = 0; i < clientAmountDeposits; i++)
             {
                 Write("Процентная ставка: "); var depositPercent = Convert.ToDouble(ReadLine());
-                Write("Размер вклада: ");  var depositSize = Convert.ToDouble(ReadLine());
-                Write("Время открытия вклада: "); var depositDateOpen = ReadLine();
-                Write("Время закрытия вклада: "); var depositDateClose = ReadLine();
+                Write("Размер вклада: "); var depositSize = Convert.ToDouble(ReadLine());
+                WriteLine("Дата открытия вклада:"); Write("Год: "); var depositYearOpen = Convert.ToInt32(ReadLine()); Write("Месяц: "); var depositMonthOpen = Convert.ToInt32(ReadLine()); Write("День: "); var depositDayOpen = Convert.ToInt32(ReadLine()); var depositDateOpen = new DateTime(depositYearOpen, depositMonthOpen, depositDayOpen);
+                WriteLine("Дата закрытия вклада:"); Write("Год: "); var depositYearClose = Convert.ToInt32(ReadLine()); Write("Месяц: "); var depositMonthClose = Convert.ToInt32(ReadLine()); Write("День: "); var depositDayClose = Convert.ToInt32(ReadLine()); var depositDateClose = new DateTime(depositYearClose, depositMonthClose, depositDayClose);
                 sequenceDeposit.MoveNext();
                 var depositID = sequenceDeposit.Current;
                 var deposit = new Deposits
@@ -103,22 +104,24 @@ namespace BankClients_bDs
         }
 
         static void ReadAllRecords()
-        { 
+        {
             foreach (var client in DB)
             {
                 WriteLine($"ID\t Фамилия\t Номер паспорта\t Количество вкладов");
                 WriteLine($"{client.ID}\t {client.surName}\t {client.passNumber}\t {client.amountDeposit}");
-                WriteLine();
-                WriteLine($"\tID\t Ставка\t Размер\t Дата открытия\t Дата закрытия\t Номер паспорта");
                 foreach (var deposit in client.infoDeposit)
                 {
-                    WriteLine($"\t{deposit.ID}\t {deposit.percent}\t {deposit.size}\t {deposit.dateOpen}\t {deposit.dateClose}\t {deposit.clientPassNumebrs}");
+                    WriteLine();
+                    WriteLine($"\tID\t Ставка\t Размер\t Дата открытия\t\t Дата закрытия\t");
+                    WriteLine($"\t{deposit.ID}\t {deposit.percent}\t {deposit.size}\t {deposit.dateOpen}\t {deposit.dateClose}\t");
+                    WriteLine($"\tНомер паспорта\t Доход\t");
+                    WriteLine($"\t{deposit.clientPassNumebrs}\t {CalculateDepositProfit(deposit)}");
                     WriteLine();
                 }
             }
         }
 
-        static void MaxAmount()
+        static void MaxAmountofDepositProfit()
         {
             int maxClientID = 0;
             int maxDepositID = 0;
@@ -127,9 +130,9 @@ namespace BankClients_bDs
             {
                 foreach (var deposit in client.infoDeposit)
                 {
-                    if (deposit.size > max)
+                    if (CalculateDepositProfit(deposit) > max)
                     {
-                        max = deposit.size;
+                        max = CalculateDepositProfit(deposit);
                         maxDepositID = deposit.ID;
                         maxClientID = client.ID;
                     }
@@ -177,7 +180,7 @@ namespace BankClients_bDs
             foreach (var client in DB)
             {
                 if (client.ID == minClientID)
-                {   
+                {
                     WriteLine($"ID\t Фамилия\t Номер паспорта\t Количество вкладов");
                     WriteLine($"{client.ID}\t {client.surName}\t {client.passNumber}\t {client.amountDeposit}");
                     WriteLine();
@@ -200,7 +203,7 @@ namespace BankClients_bDs
             DB.RemoveAt(Convert.ToInt32(userDeletedRecord) - 1);
         }
 
-        static void Transaction(int min_depositID,int plus_depositID, double amount)
+        static void Transaction(int min_depositID, int plus_depositID, double amount)
         {
             var takenAmount = amount;
             foreach (var client in DB)
@@ -230,6 +233,13 @@ namespace BankClients_bDs
                     }
                 }
             }
+        }
+
+        static double CalculateDepositProfit(Deposits deposit)
+        {
+            double amountOfDaysGone = (deposit.dateClose - todayDate).TotalDays;
+            double amountOfDaysShouldGone = (deposit.dateClose - deposit.dateOpen).TotalDays;
+            return ((((deposit.dateClose - deposit.dateOpen).TotalDays / 365 * (deposit.percent / 100)) + 1) * deposit.size) - deposit.size;
         }
     }
 }
