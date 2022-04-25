@@ -145,18 +145,21 @@ namespace BankClients_bDs
                 {
                     WriteLine($"ID\t Фамилия\t Номер паспорта\t Количество вкладов");
                     WriteLine($"{client.ID}\t {client.surName}\t {client.passNumber}\t {client.amountDeposit}");
-                    WriteLine();
-                    WriteLine($"\tID\t Ставка\t Размер\t Дата открытия\t Дата закрытия\t Номер паспорта");
                 }
                 foreach (var deposit in client.infoDeposit)
                 {
                     if (deposit.ID == maxDepositID)
                     {
-                        WriteLine($"\t{deposit.ID}\t {deposit.percent}\t {deposit.size}\t {deposit.dateOpen}\t {deposit.dateClose}\t {deposit.clientPassNumebrs}");
+                        WriteLine();
+                        WriteLine($"\tID\t Ставка\t Размер\t Дата открытия\t\t Дата закрытия\t");
+                        WriteLine($"\t{deposit.ID}\t {deposit.percent}\t {deposit.size}\t {deposit.dateOpen}\t {deposit.dateClose}\t");
+                        WriteLine($"\tНомер паспорта\t Доход\t");
+                        WriteLine($"\t{deposit.clientPassNumebrs}\t {CalculateDepositProfit(deposit)}");
                         WriteLine();
                     }
                 }
             }
+
         }
 
         static void MinAmount()
@@ -168,9 +171,9 @@ namespace BankClients_bDs
             {
                 foreach (var deposit in client.infoDeposit)
                 {
-                    if (deposit.size < min)
+                    if (CalculateDepositProfit(deposit) < min)
                     {
-                        min = deposit.size;
+                        min = CalculateDepositProfit(deposit);
                         minDepositID = deposit.ID;
                         minClientID = client.ID;
                     }
@@ -183,14 +186,17 @@ namespace BankClients_bDs
                 {
                     WriteLine($"ID\t Фамилия\t Номер паспорта\t Количество вкладов");
                     WriteLine($"{client.ID}\t {client.surName}\t {client.passNumber}\t {client.amountDeposit}");
-                    WriteLine();
                 }
                 WriteLine($"\tID\t Ставка\t Размер\t Дата открытия\t Дата закрытия\t Номер паспорта");
                 foreach (var deposit in client.infoDeposit)
                 {
                     if (deposit.ID == minDepositID)
                     {
-                        WriteLine($"\t{deposit.ID}\t {deposit.percent}\t {deposit.size}\t {deposit.dateOpen}\t {deposit.dateClose}\t {deposit.clientPassNumebrs}");
+                        WriteLine();
+                        WriteLine($"\tID\t Ставка\t Размер\t Дата открытия\t\t Дата закрытия\t");
+                        WriteLine($"\t{deposit.ID}\t {deposit.percent}\t {deposit.size}\t {deposit.dateOpen}\t {deposit.dateClose}\t");
+                        WriteLine($"\tНомер паспорта\t Доход\t");
+                        WriteLine($"\t{deposit.clientPassNumebrs}\t {CalculateDepositProfit(deposit)}");
                         WriteLine();
                     }
                 }
@@ -239,7 +245,12 @@ namespace BankClients_bDs
         {
             double amountOfDaysGone = (deposit.dateClose - todayDate).TotalDays;
             double amountOfDaysShouldGone = (deposit.dateClose - deposit.dateOpen).TotalDays;
-            return ((((deposit.dateClose - deposit.dateOpen).TotalDays / 365 * (deposit.percent / 100)) + 1) * deposit.size) - deposit.size;
+            if (todayDate > deposit.dateClose)
+            {
+                return ((((deposit.dateClose - deposit.dateOpen).TotalDays / 365 * (deposit.percent / 100)) + 1) * deposit.size) - deposit.size;
+            }
+            return ((((todayDate - deposit.dateOpen).TotalDays / 365 * (deposit.percent / 100)) + 1) * deposit.size) - deposit.size;
+
         }
     }
 }
